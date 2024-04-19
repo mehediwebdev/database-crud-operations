@@ -1,3 +1,132 @@
 /* .table-test{
     background-color: red !important;
 } */
+
+/* Custom table styles */
+.wp-list-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.wp-list-table th, .wp-list-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.wp-list-table th {
+    background-color: #f2f2f2;
+    text-align: center;
+	padding:12px 0px;
+}
+
+.wp-list-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+
+
+
+
+
+    /* Styles for popup form */
+    /* .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 50px 20px;
+        border: 1px solid #ccc;
+        z-index: 1000;
+    } */
+
+
+    #addNewButton {
+        padding: 10px 20px; 
+        color: #fff; 
+        background-color: #007bff; 
+        border: none; 
+        border-radius: 5px; 
+        cursor: pointer; 
+        font-size: 17px;
+    }
+    
+    #addNewButton:hover {
+        background-color: #0056b3; /* Change button background color on hover */
+    }
+    
+    #addNewButton span {
+        margin-left: 5px; /* Add spacing between "Add New" text and "+" symbol */
+    }
+    
+
+
+
+ /* Styles for submit button */
+ #addNewForm button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px; /* Adjust font size as needed */
+}
+
+#addNewForm button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+
+    /* Styles for popup form */
+    .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 30px 20px;
+        border: 1px solid #ccc;
+        z-index: 1000;
+        max-width: 500px;
+        width:400px;
+    }
+
+    /* Styles for form inputs */
+    #addNewForm {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #addNewForm label {
+        margin-bottom: 10px;
+    }
+
+    #addNewForm input[type="text"],
+    #addNewForm input[type="email"] {
+        width: 100%;
+        padding: 8px;
+        margin: 5px 0;
+        box-sizing: border-box;
+    }
+
+    /* Styles for submit button */
+    #addNewForm button[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #addNewForm button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
