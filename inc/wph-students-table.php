@@ -3,12 +3,13 @@
     <button id="addNewButton">Add New <span>+</span></button>
         <!-- Popup form -->
         <div id="popupForm" class="popup">
-        <form id="addNewForm">
+        <form id="addNewForm" action="" method="post">
+        <?php wp_nonce_field('database-crud-nonce-action', 'database-crud-nonce'); ?>
             <label for="name">Name:</label>
             <input type="text" id="name" name="name">
             <label for="email">Email:</label>
             <input type="email" id="email" name="email">
-            <button type="submit">Submit</button>
+            <button type="submit" name="submit">Submit</button>
         </form>
     </div>
 </div>
@@ -22,23 +23,34 @@
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody>
-            <?php
-            // Retrieve data to populate the table (you should replace this with your own data retrieval logic)
-            global $wpdb;
-            $results = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}custom_data_table");
+ <tbody>
+    <?php
+    // Retrieve data to populate the table (you should replace this with your own data retrieval logic)
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'wph_students';
+    $sql_students =  "SELECT * FROM $table_name ORDER BY id ASC";
+    $items = $wpdb->get_results($sql_students);
 
-            foreach ($results as $row) {
-                echo "<tr>";
-                echo "<td>{$row->id}</td>";
-                echo "<td>{$row->name}</td>";
-                echo "<td>{$row->email}</td>";
-                echo "<td><button>Edit</button> <button>Delete</button></td>"; // Example action buttons
-                echo "</tr>";
-            }
-            ?>
-        </tbody>
-    </table>
+    foreach ($items as $item) {
+    ?>
+
+    <tr>
+    <th scope="row"><?php echo $item->id; ?></th>
+    <td><?php echo $item->name; ?></td>
+    <td><?php echo $item->email; ?></td>
+
+    <td>
+      <!-- <a type="button" class="btn btn-primary">Edit</a> -->
+      <!-- <a href="#" class="btn btn-primary">Delete</a> -->
+      <a href="<?php echo admin_url('admin.php?page=database-crud&action=edit&id=' . $item->id ) ?>" onclick="return confirm('are you sure ?')" class="btn btn-danger">Edit</a>
+      <a href="<?php echo admin_url('admin.php?page=database-crud&action=delete&id=' . $item->id ) ?>" onclick="return confirm('are you sure ?')" class="btn btn-danger">Delete</a>
+      </td>
+    </tr>
+     
+
+ <?php   } ?>
+</tbody>
+</table>
 
 
 
@@ -56,4 +68,7 @@
             popupForm.style.display = "none";
         }
     });
+
 </script>
+
+

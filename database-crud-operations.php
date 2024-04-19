@@ -36,8 +36,11 @@ if (!class_exists('WPH_Database_Crud_Operations')){
 
         public function init() {
             $this->define_constants();
+           // $this->digital_school_delete_students($id);
             add_action('admin_menu', [$this, 'student_crud_menu']);
             add_action( 'admin_enqueue_scripts', [$this, 'load_admin_assets']);
+            $id = intval($_GET['id']);
+            $this->digital_school_delete_students($id);
         }
 
         public function define_constants() {
@@ -58,6 +61,13 @@ if (!class_exists('WPH_Database_Crud_Operations')){
             ) $charset_collate;";
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
             dbDelta($sql);
+
+
+            if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])){
+                $id = intval($_GET['id']);
+                $this->digital_school_delete_students($id); // Pass $id to the method
+            }
+
         }
 
         function deactivate() {
@@ -93,8 +103,41 @@ if (!class_exists('WPH_Database_Crud_Operations')){
             wp_enqueue_script( 'wph-dbcrud-main-js', $asset_directory . 'admin/js/main.js', [], $version, true );
 
         }
-       
-    }
+
+        // Insert Student Function
+
+function database_crud_insert_students(){
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'wph_students';
+    $name = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
+    $email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+	$wpdb->insert(
+	  $table_name,
+	  array(
+	  'name' => $name,
+	  'email' => $email,
+	  )
+	
+	);
+  
+   }
+
+
+
+   //Delete student
+   // Delete Students function
+
+public function digital_school_delete_students($id){
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . 'wph_students';
+
+  //  $id = $_GET['id'];
+
+    $wpdb->delete( $table_name, array( 'id' => $id ) );
+}
+
+ }
 }
 
 if ( class_exists('WPH_Database_Crud_Operations') ) {
