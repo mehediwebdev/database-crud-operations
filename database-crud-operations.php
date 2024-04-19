@@ -27,20 +27,28 @@ if (!class_exists('WPH_Database_Crud_Operations')){
 
         public function __construct(){
             global $wpdb;
-            $this->table_name = $wpdb->prefix . 'students'; //wp_custom_table
+            $this->table_name = $wpdb->prefix . 'wph_students'; //wp_custom_table
             add_action('init', [$this, 'init']);
             register_activation_hook(__FILE__, [$this, 'create_student_table']);
             register_deactivation_hook(__FILE__, [$this, 'deactivate']); 
      
         }
 
-      public  function init() {
-        add_action('admin_menu', [$this, 'student_crud_menu']);
-     }
+        public function init() {
+            $this->define_constants();
+            add_action('admin_menu', [$this, 'student_crud_menu']);
+            add_action( 'admin_enqueue_scripts', [$this, 'load_admin_assets']);
+        }
+
+        public function define_constants() {
+            define('WPH_DB_CRUD_PATH', plugin_dir_path(__FILE__));
+            define('WPH_DB_CRUD_URL', plugin_dir_url(__FILE__));
+            define('WPH_DB_CRUD_VERSION', '1.0.0');
+        }
 
         function create_student_table() {
             global $wpdb;
-            $table_name = $wpdb->prefix . 'students';
+            $table_name = $wpdb->prefix . 'wph_students';
             $charset_collate = $wpdb->get_charset_collate();
             $sql = "CREATE TABLE $table_name (
                 id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -53,43 +61,42 @@ if (!class_exists('WPH_Database_Crud_Operations')){
         }
 
         function deactivate() {
-            global $wpdb;
-            // $wpdb->query("DROP TABLE IF EXISTS $this->table_name");
+            // Perform cleanup tasks if needed
         }
     
         function student_crud_menu() {
             add_menu_page(
-                'Database CRUD',
-                'Database CRUD',
+                __('Database CRUD', 'database-crud-operations'), // Escaping and translation
+                __('Database CRUD', 'database-crud-operations'), // Escaping and translation
                 'manage_options',
                 'database-crud',
                 [$this, 'database_crud_page'],
-                'dashicons-admin-generic',
+                'dashicons-welcome-learn-more',
+                7
             );
         }
 
-
-        function database_crud_page() {
-          ?>
-          <div class="wrap">
-        <h2>Manage Students</h2>
-        <!-- Add New button -->
-        <!-- <button id="addNewButton">Add New</button> -->
-        <!-- Form for adding new student (initially hidden) -->
-        <!-- <div id="addNewForm" style="display: none;"> -->
-            <h3>Add New Student</h3>
-            <form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
-                <input type="text" name="student_name" placeholder="Student Name" required>
-                <input type="email" name="student_email" placeholder="Student Email" required>
-                <input type="submit" name="submit_add_student" value="Add Student">
-            </form>
-        </div>
-           <?php
+        public function database_crud_page() {
+            if ( file_exists( plugin_dir_path( __FILE__ ) . 'inc/wph-students-table.php' ) ) {
+                require_once plugin_dir_path( __FILE__ ) . 'inc/wph-students-table.php';
+            } 
         }
-        
+
+        // Admin assets enqueue callback function
+        public function load_admin_assets($screen){
+            $version = WPH_DB_CRUD_VERSION;
+            $asset_directory = plugins_url('assets/', __FILE__);
+            
+            // Enqueue the css file for admin 
+            wp_enqueue_style( 'wph-dbcrud-admin-style', $asset_directory . 'admin/css/admin-style.css', [], $version, 'all' );
+            // Enqueue the JavaScript file for admin 
+            wp_enqueue_script( 'wph-dbcrud-main-js', $asset_directory . 'admin/js/main.js', [], $version, true );
+
+        }
        
- }
+    }
 }
+
 if ( class_exists('WPH_Database_Crud_Operations') ) {
     $wph_database_crud_operations = new WPH_Database_Crud_Operations();
 }
