@@ -15,7 +15,6 @@
 
 .wp-list-table th {
     background-color: #f2f2f2;
-    text-align: center;
 	padding:12px 0px;
 }
 
@@ -23,23 +22,6 @@
     background-color: #f2f2f2;
 }
 
-
-
-
-
-
-    /* Styles for popup form */
-    /* .popup {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: white;
-        padding: 50px 20px;
-        border: 1px solid #ccc;
-        z-index: 1000;
-    } */
 
 
     #addNewButton {
@@ -129,4 +111,3 @@
     #addNewForm button[type="submit"]:hover {
         background-color: #0056b3;
     }
-

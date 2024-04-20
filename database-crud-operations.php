@@ -36,11 +36,21 @@ if (!class_exists('WPH_Database_Crud_Operations')){
 
         public function init() {
             $this->define_constants();
-           // $this->digital_school_delete_students($id);
             add_action('admin_menu', [$this, 'student_crud_menu']);
             add_action( 'admin_enqueue_scripts', [$this, 'load_admin_assets']);
-            $id = intval($_GET['id']);
-            $this->digital_school_delete_students($id);
+          
+         //   $id = intval($_GET['id']);
+          //  $this->database_crud_delete_students($id);
+
+            $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+if ($id > 0) {
+    $this->database_crud_delete_students($id);
+}
+
+
+            if (isset($_POST['submit'])) {
+                $this->database_crud_insert_students();
+            }
         }
 
         public function define_constants() {
@@ -62,10 +72,16 @@ if (!class_exists('WPH_Database_Crud_Operations')){
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
             dbDelta($sql);
 
-
+           //For Insert and update
+           if( isset($_POST['database-crud-nonce']) && wp_verify_nonce($_POST['database-crud-nonce'], 'database-crud-nonce-action')){
+            database_crud_insert_students();
+           }
+           
+    
+           //For Delete
             if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])){
                 $id = intval($_GET['id']);
-                $this->digital_school_delete_students($id); // Pass $id to the method
+                $this->database_crud_delete_students($id); // Pass $id to the method
             }
 
         }
@@ -74,6 +90,8 @@ if (!class_exists('WPH_Database_Crud_Operations')){
             // Perform cleanup tasks if needed
         }
     
+
+        
         function student_crud_menu() {
             add_menu_page(
                 __('Database CRUD', 'database-crud-operations'), // Escaping and translation
@@ -96,7 +114,6 @@ if (!class_exists('WPH_Database_Crud_Operations')){
         public function load_admin_assets($screen){
             $version = WPH_DB_CRUD_VERSION;
             $asset_directory = plugins_url('assets/', __FILE__);
-            
             // Enqueue the css file for admin 
             wp_enqueue_style( 'wph-dbcrud-admin-style', $asset_directory . 'admin/css/admin-style.css', [], $version, 'all' );
             // Enqueue the JavaScript file for admin 
@@ -104,38 +121,34 @@ if (!class_exists('WPH_Database_Crud_Operations')){
 
         }
 
-        // Insert Student Function
-
-function database_crud_insert_students(){
+// Insert Student Function
+public function database_crud_insert_students() {
     global $wpdb;
     $table_name = $wpdb->prefix . 'wph_students';
-    $name = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
-    $email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
-	$wpdb->insert(
-	  $table_name,
-	  array(
-	  'name' => $name,
-	  'email' => $email,
-	  )
-	
-	);
-  
-   }
+    if (isset($_POST['submit'])) {
+         $name = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
+         $email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+    }
+    $result = $wpdb->insert(
+        $table_name,
+        array(
+            'name' => $name,
+            'email' => $email,
+        )
+    );
 
-
-
-   //Delete student
-   // Delete Students function
-
-public function digital_school_delete_students($id){
-    global $wpdb;
-
-    $table_name = $wpdb->prefix . 'wph_students';
-
-  //  $id = $_GET['id'];
-
-    $wpdb->delete( $table_name, array( 'id' => $id ) );
 }
+
+
+// Delete Students function
+public function database_crud_delete_students($id){
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'wph_students';
+    $wpdb->delete( $table_name, array( 'id' => $id ) );
+
+
+
+ }
 
  }
 }

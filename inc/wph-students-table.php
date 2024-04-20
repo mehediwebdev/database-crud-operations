@@ -42,7 +42,7 @@
     <td>
       <!-- <a type="button" class="btn btn-primary">Edit</a> -->
       <!-- <a href="#" class="btn btn-primary">Delete</a> -->
-      <a href="<?php echo admin_url('admin.php?page=database-crud&action=edit&id=' . $item->id ) ?>" onclick="return confirm('are you sure ?')" class="btn btn-danger">Edit</a>
+      <a href="<?php echo admin_url('admin.php?page=database-crud&action=edit&id=' . $item->id ) ?>"  class="btn btn-danger">Edit</a> ||
       <a href="<?php echo admin_url('admin.php?page=database-crud&action=delete&id=' . $item->id ) ?>" onclick="return confirm('are you sure ?')" class="btn btn-danger">Delete</a>
       </td>
     </tr>
